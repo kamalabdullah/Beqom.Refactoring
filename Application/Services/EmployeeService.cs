@@ -12,7 +12,7 @@ namespace Application.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly ISalaryCalculatorFactory _calculatorFactory;
-
+        private const int charNameLenth = 3;
         public EmployeeService(ISalaryCalculatorFactory calculatorFactory)
         {
             _calculatorFactory = calculatorFactory;
@@ -25,32 +25,35 @@ namespace Application.Services
 
         public string GenerateEmployeeReport(Employee employee)
         {
-            var newSalary = CalculateNewSalary((EmployeeType)employee.Type, employee.Years, employee.Salary);
+            var newSalary = CalculateNewSalary((EmployeeType)employee.Type, employee.Years, employee.Compensation.Salary);
             var maskedName = MaskName(employee.Name);
-            return $"Employee Name: {maskedName}, Type: {((EmployeeType)employee.Type)}, Years: {employee.Years}, Salary: {employee.Salary}, New Salary: {newSalary}";
+            return $"Employee Name: {maskedName}, Type: {((EmployeeType)employee.Type)}, Years: {employee.Years}, Salary: {employee.Compensation.Salary}, New Salary: {newSalary}";
         }
 
         public string GenerateReport(List<Employee> employees)
         {
-            var report = "";
+            StringBuilder reportStringBuilder = new StringBuilder("");
             foreach (var employee in employees)
             {
-                report += GenerateEmployeeReport(employee) + Environment.NewLine;
+                reportStringBuilder.Append(GenerateEmployeeReport(employee));
+                reportStringBuilder.Append(Environment.NewLine);
             }
-            return report;
+            return reportStringBuilder.ToString();
         }
-
         private string MaskName(string name)
         {
-            var firstChars = name.Substring(0, 3);
-            var length = name.Length - 3;
+            int length = name.Length;
 
-            for (int i = 0; i < length; i++)
+            if (length <= charNameLenth)
             {
-                firstChars += "*";
+                return new string('*', length);
             }
 
-            return firstChars;
+            StringBuilder stringBuilder = new StringBuilder(length);
+            stringBuilder.Append(name, 0, charNameLenth);
+            stringBuilder.Append('*', length - charNameLenth);
+
+            return stringBuilder.ToString();
         }
     }
 }

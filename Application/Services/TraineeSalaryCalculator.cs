@@ -11,7 +11,9 @@ namespace Application.Services
     {
         public decimal CalculateSalary(int years, decimal currentSalary)
         {
-            return currentSalary / 100 + currentSalary;
+            decimal increasePrecentageAmount = currentSalary * SalaryCalculatorHelper.TraineeSalaryIncreasePercentage;
+            decimal newSalary = currentSalary + increasePrecentageAmount;
+            return newSalary;
         }
     }
 }

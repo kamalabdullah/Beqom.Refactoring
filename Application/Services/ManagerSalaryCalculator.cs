@@ -11,7 +11,10 @@ namespace Application.Services
     {
         public decimal CalculateSalary(int years, decimal currentSalary)
         {
-            return ((currentSalary) * (years > 5 ? 5 : years)) / 100 + currentSalary + (currentSalary * 15 / 100);
+            decimal increasePrecentageAmount = currentSalary * SalaryCalculatorHelper.ManagerSalaryIncreasePercentage;
+            decimal seniorityLevelIncreaseAmount = SalaryCalculatorHelper.SeniorityCompensationIncrease(currentSalary, years);
+            decimal newSalary = currentSalary + increasePrecentageAmount + seniorityLevelIncreaseAmount;
+            return newSalary;
         }
     }
 }
